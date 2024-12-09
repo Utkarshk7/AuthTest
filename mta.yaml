@@ -1,0 +1,80 @@
+_schema-version: "3.2"
+ID: AuthTest
+version: 0.0.1
+modules:
+- name: AuthTest-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: AuthTest-destination-service
+    parameters:
+      content-target: true
+  - name: AuthTest_html_repo_host
+    parameters:
+      service-key:
+        name: AuthTest_html_repo_host-key
+  - name: uaa_AuthTest
+    parameters:
+      service-key:
+        name: uaa_AuthTest-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: AuthTest_AuthTest_html_repo_host
+          ServiceInstanceName: AuthTest-html5-app-host-service
+          ServiceKeyName: AuthTest_html_repo_host-key
+          sap.cloud.service: AuthTest
+        - Authentication: OAuth2UserTokenExchange
+          Name: AuthTest_uaa_AuthTest
+          ServiceInstanceName: AuthTest-xsuaa-service
+          ServiceKeyName: uaa_AuthTest-key
+          sap.cloud.service: AuthTest
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
+- name: AuthTest_ui_deployer
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: AuthTest_html_repo_host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - AuthTest-content.zip
+      name: AuthTest
+      target-path: resources/
+- name: AuthTest
+  type: html5
+  path: AuthTest
+  build-parameters:
+    builder: custom
+    commands:
+    - npm install
+    - npm run build
+    supported-platforms: []
+resources:
+- name: AuthTest-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      version: 1.0.0
+    service: destination
+    service-name: AuthTest-destination-service
+    service-plan: lite
+- name: AuthTest_html_repo_host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: AuthTest-html5-app-host-service
+    service-plan: app-host
+- name: uaa_AuthTest
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: AuthTest-xsuaa-service
+    service-plan: application

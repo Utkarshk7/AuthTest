@@ -1,0 +1,23 @@
+{
+  "welcomeFile": "/index.html",
+  "authenticationMethod": "route",
+  "logout": {
+    "logoutEndpoint": "/do/logout"
+  },
+  "routes": [
+    {
+      "csrfProtection": false,
+      "source": "^/capex_api/(.*)$",
+      "destination": "capex_api",
+      "target": "$1",
+      "authenticationType":"xsuaa",
+      "identityProvider": "httpssts.windows.netfd4efb89-68eb-42"
+    },
+    {
+      "source": "^(.*)$",
+      "target": "$1",
+      "service": "html5-apps-repo-rt",
+      "authenticationType": "xsuaa"
+    }
+  ]
+}
