@@ -17,9 +17,10 @@
     "web-vitals": "^1.1.1"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "bestzip": "^2.2.0",
-    "npm-watch": "^0.9.0",
-    "copyfiles": "^2.4.1"
+    "copyfiles": "^2.4.1",
+    "npm-watch": "^0.9.0"
   },
   "scripts": {
     "start": "react-scripts start",
